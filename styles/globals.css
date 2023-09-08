@@ -1,0 +1,199 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+    --toastify-color-light: #fff;
+    --toastify-color-dark: #121212;
+    --toastify-color-info: #3498db;
+    --toastify-color-success: #07bc0c;
+    --toastify-color-warning: #f1c40f;
+    --toastify-color-error: #e74c3c;
+    --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+  
+    --toastify-icon-color-info: var(--toastify-color-info);
+    --toastify-icon-color-success: var(--toastify-color-success);
+    --toastify-icon-color-warning: var(--toastify-color-warning);
+    --toastify-icon-color-error: var(--toastify-color-error);
+  
+    --toastify-toast-width: 320px;
+    --toastify-toast-background: #fff;
+    --toastify-toast-min-height: 64px;
+    --toastify-toast-max-height: 800px;
+    --toastify-font-family: sans-serif;
+    --toastify-z-index: 9999;
+  
+    --toastify-text-color-light: #757575;
+    --toastify-text-color-dark: #fff;
+  
+    --toastify-text-color-info: #fff;
+    --toastify-text-color-success: #fff;
+    --toastify-text-color-warning: #fff;
+    --toastify-text-color-error: #fff;
+  
+    --toastify-spinner-color: #616161;
+    --toastify-spinner-color-empty-area: #e0e0e0;
+  
+    --toastify-color-progress-light: linear-gradient(
+      to right,
+      #4cd964,
+      #5ac8fa,
+      #007aff,
+      #34aadc,
+      #5856d6,
+      #ff2d55
+    );
+    --toastify-color-progress-dark: #bb86fc;
+    --toastify-color-progress-info: var(--toastify-color-info);
+    --toastify-color-progress-success: var(--toastify-color-success);
+    --toastify-color-progress-warning: var(--toastify-color-warning);
+    --toastify-color-progress-error: var(--toastify-color-error);
+  }
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    @apply bg-white text-gray-900 transition-all duration-200;
+}
+
+.form-input {
+    @apply rounded-none focus:ring-0 focus:ring-offset-0 focus:border-green-600 bg-gray-100 hover:border-green-600 border-0 border-b-2 border-gray-500 text-gray-900 text-base focus:border-b-2 outline-none py-2 px-4 m-0;
+    --tw-ring-shadow: none !important;
+    --tw-ring-offset-shadow: none !important;
+    transition: background 200ms ease, border 200ms ease;
+}
+
+.form-input-dropdown {
+    @apply transition;
+}
+
+.form-dropdown {
+    @apply mb-2;
+    cursor: pointer;
+}
+
+button {
+    transition: background 200ms ease, border 200ms ease;
+}
+
+.button-select{
+    @apply flex flex-col items-center w-full h-full text-center py-12 rounded-none border-2 bg-gray-100 border-gray-200 hover:border-gray-200;
+}
+
+.button-select img{
+    @apply w-48 pb-5
+}
+
+.button-select:disabled{
+    @apply bg-gray-100 text-gray-300 border-gray-100;
+}
+
+.button-select:disabled:hover {
+    @apply bg-gray-100 cursor-not-allowed;
+}
+
+.background-green {
+    @apply bg-green-600 hover:bg-green-700 text-white;
+}
+
+.button-secondary {
+   @apply bg-transparent rounded-none hover:bg-gray-200 py-2 px-4;
+}
+
+.button-primary {
+    @apply bg-green-600 w-full text-white rounded-none hover:bg-green-500 py-2 px-4;
+ }
+
+.radio-button {
+    @apply text-center py-5 rounded-none border border-gray-200 hover:border-gray-300 hover:bg-gray-100 outline-none ring-0 cursor-pointer;
+    transition: background 200ms ease, border 200ms ease, box-shadow 300ms ease;
+}
+
+.checkmark {
+    transition: background 200ms ease;
+
+}
+
+.link-primary{
+    background: linear-gradient(currentColor 0 0) 0 100% /var(--d, 0) 2px no-repeat;
+    transition: background .2s ease-in;
+    text-decoration: none !important
+}
+
+.link-primary:hover {
+    --d: 100%
+}
+
+.navbar {
+    @apply w-full;
+    transition: padding 300ms ease, background 200ms ease, box-shadow 200ms ease;
+}
+
+.navbar-tr {
+    @apply py-4 bg-transparent;
+}
+
+.navbar-sl {
+    @apply py-2 bg-gray-100 bg-opacity-80 backdrop-blur-sm shadow-md;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .link-main {
+    text-decoration: underline dotted;
+    text-decoration-color: #121212;
+  }
+
+  .body {
+    overflow-x: scroll; /* Show horizontal scrollbar */
+  }
+
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+  }
