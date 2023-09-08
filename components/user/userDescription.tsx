@@ -28,8 +28,8 @@ export default function UserDescription(props: any) {
 
     const [modalData, setModalData] = useState({});
 
-//get userdata and processes
-const auth = useAuth()
+    //get userdata and processes
+    const auth = useAuth()
 
     //get python or c code url
     const [pythonCodeUrl, setPythonCodeUrl] = useState("");
@@ -128,11 +128,27 @@ const auth = useAuth()
                         </dd>
                     </div>
                     <div className="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
+                        <dt className="text-sm font-medium text-gray-500">Passwort</dt>
+                        <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            <span className="flex-grow">*********</span>
+                            <span className="ml-4 flex-shrink-0">
+                                <button
+                                    type="button"
+                                    className="rounded-none font-medium text-green-600 hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                    onClick={() => setOpen4(true)}
+                                >
+                                    Zurücksetzen
+                                </button>
+                                <ResetPasswordModal open={open4} setOpen={setOpen4} Email={userdata.Email}></ResetPasswordModal>
+                            </span>
+                        </dd>
+                    </div>
+                    <div className="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium text-gray-500">Maschinencode Arduino</dt>
                         <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                             <a href={cCodeUrl} className="link-main truncate">{cCodeUrl}</a>
                             <div className="ml-4 flex-shrink-0 flex space-x-4">
-                                
+
                                 <button
                                     type="button"
                                     className="rounded-none font-medium text-green-600 hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
@@ -152,7 +168,7 @@ const auth = useAuth()
                         <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                             <a href={pythonCodeUrl} className="link-main truncate">{pythonCodeUrl}</a>
                             <div className="ml-4 flex-shrink-0 flex space-x-4">
-                                
+
                                 <button
                                     type="button"
                                     className="rounded-none font-medium text-green-600 hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
@@ -167,29 +183,14 @@ const auth = useAuth()
                             </div>
                         </dd>
                     </div>
-                    <div className="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
-                        <dt className="text-sm font-medium text-gray-500">Passwort</dt>
-                        <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <span className="flex-grow">*********</span>
-                            <span className="ml-4 flex-shrink-0">
-                                <button
-                                    type="button"
-                                    className="rounded-none font-medium text-green-600 hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                                    onClick={() => setOpen4(true)}
-                                >
-                                    Zurücksetzen
-                                </button>
-                                <ResetPasswordModal open={open4} setOpen={setOpen4} Email={userdata.Email}></ResetPasswordModal>
-                            </span>
-                        </dd>
-                    </div>
+
                     <div className="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium text-gray-500">Voreinstellungen</dt>
                         <dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                             <span className="flex-grow">...voreinstellungen anzeigen (können bei process generiert werden)</span>
                         </dd>
                     </div>
-                    
+
                     <div className="py-4 sm:grid sm:py-5 sm:grid-cols-3 sm:gap-4">
                         <dt className="text-sm font-medium text-gray-500">Stickvorgänge</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">

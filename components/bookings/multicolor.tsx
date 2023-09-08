@@ -29,31 +29,9 @@ export function ColorSelection(props: any) {
                                 <div className="flex-1 flex">
                                     <div className="flex flex-col">
                                         <div className='flex'>
-                                            {item.icon ?
-                                                <div>
-                                                    <FontAwesomeIcon width={24} height={24} icon={item.icon} className="mr-2" />
-                                                </div> : ""
-                                            }
                                             <RadioGroup.Label as="p" className="block w-full text-left font-medium text-gray-900">
                                                 {item.title}
                                             </RadioGroup.Label>
-                                        </div>
-                                        <div className='py-2'>
-                                            {item.specifications ?
-                                                <div>{
-                                                    item.specifications.map((specification: any, index: Key | null | undefined) => (
-                                                        <div key={index}>
-                                                            {specification ?
-                                                                <RadioGroup.Description as="span" className="mt-1 flex text-left items-center text-sm text-gray-500">{specification}
-                                                                </RadioGroup.Description> : ""}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                                : ""
-                                            }
-                                            <RadioGroup.Description as="span" className="mt-1 flex text-left items-center text-sm text-gray-500">
-                                                {item.description}
-                                            </RadioGroup.Description>
                                         </div>
                                     </div>
                                 </div>
