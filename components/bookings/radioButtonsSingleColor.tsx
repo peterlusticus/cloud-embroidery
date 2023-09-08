@@ -9,7 +9,8 @@ function classNames(...classes: string[]) {
 
 export function RadioButtonsSingleColor(props: any) {
     const items: any[] = props.items;
-    const [selectedItem, setSelectedItem] = useState("")
+    console.log(props.process)
+    const [selectedItem, setSelectedItem] = useState(props.process.NeedleSingle);
 
     if (selectedItem.length > 0) { props.setValue(selectedItem) }
     else { props.setValue(null) }

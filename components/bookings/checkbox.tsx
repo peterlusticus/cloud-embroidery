@@ -9,7 +9,9 @@ export default function Checkbox(props: any) {
 
     valueObj[props.FirebaseKey] = { ...valueObj[props.FirebaseKey], [props.title]: value };
     setProcessValue(valueObj[props.FirebaseKey], props.FirebaseKey)
-
+    if(props.checked){
+        setValue(true)
+    }
     function classNames(...classes: string[]) {
         return classes.filter(Boolean).join(' ')
     }

@@ -9,9 +9,9 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function RadioButtons(props: any) {
+export function RadioButtonsFrame(props: any) {
     const items: any[] = props.items;
-    const [selectedItem, setSelectedItem] = useState("")
+    const [selectedItem, setSelectedItem] = useState(props.process.Frame)
 
     if (selectedItem.length > 0) { props.setValue(selectedItem) }
     else { props.setValue(null) }

@@ -1,25 +1,22 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RadioGroup } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/24/outline';
-import { Key } from 'react';
+import { useState } from 'react';
 import { setProcessValue } from '../../pages/bookings/new';
+import { coloredOptions } from '../data/data';
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
-export function ColorSelection(props: any) {
-    const items: any[] = [{ id: "0", title: "Einfarbig", value: false }, { id: "1", title: "Mehrfarbig", value: true }];
-    const colored = props.colored;
-    const setColored = props.setColored;
-
-    setProcessValue(colored, props.FirebaseKey)
-
+export function RadioButtonsColored(props: any) {
+    const [value, setValue] = useState(props.process.Colored)
+    props.setValue(value)
+    setProcessValue(value, props.FirebaseKey)
 
     return (
-        <RadioGroup value={colored} onChange={setColored}>
+        <RadioGroup value={value} onChange={setValue}>
             <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                {items.map((item) => (
+                {coloredOptions.map((item) => (
                     <RadioGroup.Option
                         key={item.id}
                         value={item.value}

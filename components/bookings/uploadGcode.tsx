@@ -1,6 +1,6 @@
 import { faFileCode } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useEffect, useState } from 'react';
 import { storage } from "../../config/firebase";
 import { setProcessValue } from "../../pages/bookings/new";
@@ -8,7 +8,12 @@ import { setProcessValue } from "../../pages/bookings/new";
 export function UploadGcode(props: any) {
   // State to store uploaded file
   const [file, setFile] = useState<File>();
-  
+  const storageRef = ref(storage, '/files/'+props.FirebaseKey+'/gcode.txt');
+
+  if(props.process.File){
+    setFile(new File([""], ""));
+  }
+
   // Upload file on change
   useEffect(() => {
     if (file) {
@@ -21,13 +26,12 @@ export function UploadGcode(props: any) {
     setFile(event.target.files[0]);
   }
 
-  const handleUpload = () => {
-    const storageRef = ref(storage, '/files/'+props.FirebaseKey+'/gcode.txt');
+  const handleUpload = () => {    
     const content = file == undefined ? new File([""], "") : file;
     uploadBytes(storageRef, content).then((snapshot) => {
-      console.log('Uploaded a blob or file!');
-      setProcessValue(true, "File");
+      console.log(snapshot.metadata)
     });
+    
   };
 
   return (
@@ -43,7 +47,6 @@ export function UploadGcode(props: any) {
               <span>{!file && "GCODE Datei hochladen"}{file && "GCODE Datei erfolgreich hochgeladen"}</span>
               <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleChange} />
             </label>
-            <p className="pl-1">{!file && "oder hereinziehen"}</p>
           </div>
           <p className="text-xs leading-5 text-gray-600">.TXT oder .GCODE bis Maximal 10MB</p>
         </div>

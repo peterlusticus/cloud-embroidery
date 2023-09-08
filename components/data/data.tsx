@@ -17,7 +17,7 @@ export const frames = [
   { id: '2', title: "Mittel", specifications: ["Für mittelgroße Sticke", "15cm x 20cm", "Oval"], icon: faCircleNotch },
   { id: '3', title: "Klein", specifications: ["Für kleine Sticke", "10cm x 10cm", "Rund"], icon: faCircleNotch },
 ]
-
+export const coloredOptions = [{ id: "0", title: "Einfarbig", value: false }, { id: "1", title: "Mehrfarbig", value: true }];
 export const colors = ["green","black"]
 export const needles = ["1","2","3","4","5","6"]
 

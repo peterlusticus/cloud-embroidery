@@ -1,33 +1,40 @@
-import { useEffect, useState } from "react";
-
+import { uuidv4 } from "@firebase/util";
 import { get, ref, set } from "firebase/database";
 import Head from "next/head";
+import { useEffect, useState } from "react";
 import { CheckboxGroupMultiColor } from "../../components/bookings/checkboxGroupMultiColor";
+import { RadioButtonsColored } from "../../components/bookings/radioButtonsColored";
 import { InputsAlign } from "../../components/bookings/inputsAlign";
-import { ColorSelection } from "../../components/bookings/multicolor";
-import RadioButtons from "../../components/bookings/radioButtons";
+import { RadioButtonsFrame } from "../../components/bookings/radioButtons";
 import { RadioButtonsSingleColor } from "../../components/bookings/radioButtonsSingleColor";
 import { SelectGroupMultiColor } from "../../components/bookings/selectGroupMultiColor";
 import { SpeedSlider } from "../../components/bookings/slider";
 import ProcessSteps from "../../components/bookings/steps";
 import { UploadGcode } from "../../components/bookings/uploadGcode";
 import BookingContainer from "../../components/container/bookingContainer";
-import { colors, frames, needles, suffix } from "../../components/data/data";
+import { frames, needles, suffix } from "../../components/data/data";
 import FormContainer from "../../components/form/formContainer";
 import FormContainerEnd from "../../components/form/formContainerEnd";
 import FormItem from "../../components/form/formItem";
 import FormSection from "../../components/form/formSection";
 import { auth, db } from "../../config/firebase";
-import { useAuth } from "../../context/AuthContext";
-import { uuidv4 } from "@firebase/util";
 "../../components/bookings/multicolor";
 
-type Obj = { [key: string]: [key: [key: string] | string] | string }
-const process: Obj = {}
+type Obj = { [key: string]: [key: [key: string] | string | boolean] | string }
+var process: Obj = {}
 var processId = uuidv4();
 
 export const setProcessValue = (value: any, prop: any) => {
     process[prop] = value
+    set(ref(db, 'processes/' + processId), process); //todo nicht optimal hier, lieber beim zwischenspeichern
+}
+
+export const setProcess = (obj: Obj) => {
+    process = obj;
+}
+
+export const setProcessId = (id: string) => {
+    processId = id;
 }
 
 export const deleteBookingValue = (prop: any) => {
@@ -36,39 +43,45 @@ export const deleteBookingValue = (prop: any) => {
     }
 }
 
-
 export default function NewBooking() {
     const [colored, setColored] = useState(false);
     const [needleSingle, setNeedleSingle] = useState(null);
-    const [needlesMulti, setNeedlesMulti] = useState(null);
-    const [colorsMulti, setColorsMulti] = useState(null);
-
-    const [allBookings, setAllBookings] = useState(Object);
     const [currentStep, setCurrentStep] = useState(1);
     const [frame, setFrame] = useState(null);
     const [startpoint, setStartpoint] = useState(null);
+    const [wait, setWait] = useState(true);
 
     const uid = auth.currentUser == null ? "" : auth.currentUser.uid;
 
-    setProcessValue(uid, "UserID")
-    setProcessValue("open", "State")
-    setProcessValue(processId, "Name")
-    setProcessValue(false, "File");
-
-    const user = useAuth();
-
-    //get all bookings
+    const queryParameters = new URLSearchParams(window.location.search)
+    const existingProcessId = queryParameters.get("processid");
     useEffect(() => {
-        get(ref(db, 'bookings/')).then((snapshot) => {
-            if (snapshot.exists()) {
-                setAllBookings(snapshot.val());
-            } else {
-                console.log("No data available");
-            }
-        }).catch((error) => {
-            console.error(error);
-        });
-    }, [])
+        if (existingProcessId) {
+            setProcessId(existingProcessId);
+            get(ref(db, 'processes/' + existingProcessId + '/')).then((snapshot) => {
+                if (snapshot.exists()) {
+                    setProcess(snapshot.val());
+                    setWait(false)
+                } else {
+                    console.log("No data available");
+                }
+            }).catch((error) => {
+                console.error(error);
+            });
+        } else {
+            //todo statt alles einzeln ein objekt setzen
+            setProcessValue(uid, "UserID")
+            setProcessValue("open", "State")
+            setProcessValue(processId, "Name")
+            setProcessValue(false, "File");
+            setProcessValue(true, "Colored");
+            setProcessValue([false, false, false, false, false, false], "ColorsMulti");
+            setProcessValue("Groß", "Frame");
+            setProcessValue("1", "NeedleSingle");
+            setProcessValue([false, false, false, false, false, false], "NeedlesMulti");
+            setWait(false)
+        }
+    })
 
     //next/back step
     function handleSetCurrentStep(operator: string) {
@@ -82,9 +95,9 @@ export default function NewBooking() {
     function saveProcess() {
         const time = Date().toLocaleString()
         setProcessValue(time, "LastChangeTime")
-        set(ref(db, 'processes/' + processId), process);
+        console.log(process)
+        //set(ref(db, 'processes/' + processId), process);
         setCurrentStep(currentStep + 1)
-        //processId = uuidv4();
     }
 
     function startProcess() {
@@ -99,16 +112,23 @@ export default function NewBooking() {
     return (
         <div>
             <Head>
-                <title>Neuer Stickvorgang {suffix}</title>
-                <meta property="og:title" content="Neuer Stickvorgang" key="title" />
+                <title>Jetzt besticken {suffix}</title>
+                <meta property="og:title" content="Jetzt besticken" key="title" />
             </Head>
-            <BookingContainer>
+            {!wait && <BookingContainer>
                 <div className="flex justify-center mx-auto">
                     <div className="grow max-w-7xl px-4 sm:px-6 ">
                         <div>
+
                             <div className="py-4">
                                 {
-                                    <button className="button-secondary mb-4" onClick={() => handleSetCurrentStep("-")} >&larr; Zurück</button>
+                                    <div className="flex">
+                                        <button className="w-1/5 text-left button-secondary mb-4" onClick={() => handleSetCurrentStep("-")} >&larr; Zurück</button>
+                                        <div className="w-4/5 text-right font-medium text-gray-900 mb-4">
+                                            Vorgang "{processId}"
+                                        </div>
+                                    </div>
+
                                 }
                                 <ProcessSteps currentId={currentStep} />
                             </div>
@@ -120,19 +140,19 @@ export default function NewBooking() {
                                             <FormContainer title="Farben konfigurierenrieren">
                                                 <FormSection>
                                                     <FormItem title="Einfarbig/Mehrfarbig">
-                                                        <ColorSelection colored={colored} setColored={setColored} FirebaseKey="Colored" />
+                                                        <RadioButtonsColored process={process} setValue={setColored} FirebaseKey="Colored" />
                                                     </FormItem>
                                                 </FormSection>
                                                 {colored == false && <FormSection>
                                                     <FormItem title="Nadel auswählen">
-                                                        <RadioButtonsSingleColor setValue={setNeedleSingle} items={needles} FirebaseKey="NeedleSingle" />
+                                                        <RadioButtonsSingleColor process={process} setValue={setNeedleSingle} items={needles} FirebaseKey="NeedleSingle" />
                                                     </FormItem>
                                                 </FormSection>}
                                                 {colored == true &&
                                                     <div>
                                                         <FormSection>
                                                             <FormItem title="Nadeln auswählen">
-                                                                <CheckboxGroupMultiColor items={needles} FirebaseKey="NeedlesMulti" />
+                                                                <CheckboxGroupMultiColor items={needles} process={process} FirebaseKey="NeedlesMulti" />
                                                             </FormItem>
                                                         </FormSection>
                                                         <FormSection>
@@ -155,7 +175,7 @@ export default function NewBooking() {
                                 <FormContainer title="Rahmen auswählen">
                                     <FormSection>
                                         <FormItem title="Rahmen">
-                                            <RadioButtons setValue={setFrame} items={frames} FirebaseKey="Frame" />
+                                            <RadioButtonsFrame setValue={setFrame} items={frames} process={process} FirebaseKey="Frame" />
                                         </FormItem>
                                     </FormSection>
                                     <FormContainerEnd>
@@ -168,7 +188,7 @@ export default function NewBooking() {
                                 <FormContainer title="Stickcode platzieren">
                                     <FormSection>
                                         <FormItem title="Stickdatei hochladen">
-                                            <UploadGcode FirebaseKey={processId} />
+                                            <UploadGcode process={process} FirebaseKey={processId} />
                                         </FormItem>
                                     </FormSection>
                                     <FormSection>
@@ -215,7 +235,8 @@ export default function NewBooking() {
                         </div>
                     </div>
                 </div>
-            </BookingContainer>
+            </BookingContainer>}
+
         </div>
 
     )

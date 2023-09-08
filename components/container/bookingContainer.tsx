@@ -7,7 +7,7 @@ export default function BookingContainer(props: { [x: string]: any; children: an
         <body>
             <main id="skip" className="flex flex-col">
                 <BookingNavbar />
-                <div className='py-20'>
+                <div className='py-12'>
                     {children}
                 </div>
             </main>

@@ -29,7 +29,7 @@ export default function HeroSection() {
                 </h1>
                 <div className="mt-8 flex gap-x-4 sm:justify-center">
                   <button onClick={handleClick} className='ml-2 text-white px-4 py-2 text-base font-medium rounded-none bg-green-600 hover:bg-green-500 transition'>
-                    Jetzt besticken lassen&rarr;
+                    Jetzt besticken &rarr;
                   </button>
                 </div>
               </div>
