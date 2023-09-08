@@ -3,9 +3,9 @@ import { get, ref, set } from "firebase/database";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { CheckboxGroupMultiColor } from "../../components/bookings/checkboxGroupMultiColor";
-import { RadioButtonsColored } from "../../components/bookings/radioButtonsColored";
 import { InputsAlign } from "../../components/bookings/inputsAlign";
 import { RadioButtonsFrame } from "../../components/bookings/radioButtons";
+import { RadioButtonsColored } from "../../components/bookings/radioButtonsColored";
 import { RadioButtonsSingleColor } from "../../components/bookings/radioButtonsSingleColor";
 import { SelectGroupMultiColor } from "../../components/bookings/selectGroupMultiColor";
 import { SpeedSlider } from "../../components/bookings/slider";
@@ -43,7 +43,7 @@ export const deleteBookingValue = (prop: any) => {
     }
 }
 
-export default function NewBooking() {
+export default function NewProcess() {
     const [colored, setColored] = useState(false);
     const [needleSingle, setNeedleSingle] = useState(null);
     const [currentStep, setCurrentStep] = useState(1);
@@ -119,7 +119,6 @@ export default function NewBooking() {
                 <div className="flex justify-center mx-auto">
                     <div className="grow max-w-7xl px-4 sm:px-6 ">
                         <div>
-
                             <div className="py-4">
                                 {
                                     <div className="flex">
@@ -230,13 +229,11 @@ export default function NewBooking() {
                                         <button className="button-primary w-full" onClick={() => setCurrentStep(currentStep + 1)} >Weiter &rarr;</button>
                                     </FormContainerEnd>
                                 </FormContainer>
-
                             }
                         </div>
                     </div>
                 </div>
             </BookingContainer>}
-
         </div>
 
     )
