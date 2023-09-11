@@ -4,7 +4,7 @@ import Head from "next/head";
 import Router from "next/router";
 import { useEffect, useState } from "react";
 import { CheckboxGroupMultiColor } from "../../components/bookings/checkboxGroupMultiColor";
-import { InputsAlign } from "../../components/bookings/inputsAlign";
+import { Input } from "../../components/bookings/input";
 import { RadioButtonsFrame } from "../../components/bookings/radioButtons";
 import { RadioButtonsColored } from "../../components/bookings/radioButtonsColored";
 import { RadioButtonsSingleColor } from "../../components/bookings/radioButtonsSingleColor";
@@ -71,15 +71,18 @@ export default function NewProcess() {
             });
         } else {
             //todo statt alles einzeln ein objekt setzen
-            Router.push("/bookings/new?processid="+processId);
+            Router.push("/bookings/new?processid=" + processId);
             setProcessValue(uid, "UserID")
             setProcessValue("open", "State")
             setProcessValue(processId, "Name")
             setProcessValue(false, "File");
             setProcessValue(false, "Colored");
-            setProcessValue([false, false, false, false, false, false], "ColorsMulti");
+            setProcessValue(["Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen"], "ColorsMulti");
             setProcessValue("Groß", "Frame");
             setProcessValue("1", "NeedleSingle");
+            setProcessValue("Bitte angeben", "XCoordinate");
+            setProcessValue("Bitte angeben", "YCoordinate");
+
             setProcessValue([false, false, false, false, false, false], "NeedlesMulti");
             setProcessValue(processId, "ProcessId");
             setWait(false)
@@ -159,7 +162,7 @@ export default function NewProcess() {
                                                         </FormSection>
                                                         <FormSection>
                                                             <FormItem title="Farben zuordnen">
-                                                                <SelectGroupMultiColor items={needles} FirebaseKey="ColorsMulti" />
+                                                                <SelectGroupMultiColor items={needles} process={process} FirebaseKey="ColorsMulti" />
                                                             </FormItem>
                                                         </FormSection>
                                                     </div>}
@@ -195,7 +198,10 @@ export default function NewProcess() {
                                     </FormSection>
                                     <FormSection>
                                         <FormItem title="Startpunkt angeben">
-                                            <InputsAlign setValue={setStartpoint} FirebaseKey="Startpoint" />
+                                            <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                                                <Input title="X-Koordinate" process={process} FirebaseKey="XCoordinate" />
+                                                <Input title="Y-Koordinate" process={process} FirebaseKey="YCoordinate" />
+                                            </div>
                                         </FormItem>
                                     </FormSection>
                                     <FormContainerEnd>

@@ -1,21 +1,24 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { setProcessValue } from '../../pages/bookings/new';
-type Obj = { [key: string]: { [key: string]: boolean } }
-let valueObj: Obj = {};
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
 export function SelectMultiColor(props: any) {
-    const [value, setValue] = useState(false)
+    const valueArr = props.process[props.FirebaseKey];
+    const [value, setValue] = useState(valueArr[props.id])
+
+    useEffect(() => {
+        if (value) {
+            valueArr[props.id] = value;
+            setProcessValue(valueArr, props.FirebaseKey)
+        }
+    }, [value]);
 
     const items: string[] = props.items;
-
-    valueObj[props.FirebaseKey] = { ...valueObj[props.FirebaseKey], [props.title]: value };
-    setProcessValue(valueObj[props.FirebaseKey], props.FirebaseKey)
 
     return (
         <Listbox value={value} onChange={setValue}>

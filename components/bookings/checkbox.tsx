@@ -1,23 +1,29 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { setProcessValue } from "../../pages/bookings/new";
-type Obj = { [key: string]: { [key: string]: boolean } }
-let valueObj: Obj = {};
 
 export default function Checkbox(props: any) {
-    const [value, setValue] = useState(props.process[props.FirebaseKey][props.id])
+    const valueArr = props.process[props.FirebaseKey];
+    const [value, setValue] = useState(valueArr[props.id])
 
-    valueObj[props.FirebaseKey] = { ...valueObj[props.FirebaseKey], [props.id]: value };
-    setProcessValue(valueObj[props.FirebaseKey], props.FirebaseKey)
+    useEffect(() => {
+        if (value) {
+            valueArr[props.id] = value;
+            setProcessValue(valueArr, props.FirebaseKey)
+        }
+    }, [value]);
+
+    function handleClick() {
+        if (value) {
+            setValue(false);
+        }
+        else {
+            setValue(true);
+        }
+    }
 
     function classNames(...classes: string[]) {
         return classes.filter(Boolean).join(' ')
-    }
-
-    function handleClick() {
-        if (value) { setValue(false);  }
-        else { setValue(true);  }
-        //setProcessValue(valueObj[props.FirebaseKey], props.FirebaseKey)
     }
 
     return (
