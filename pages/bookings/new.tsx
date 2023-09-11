@@ -52,6 +52,7 @@ export default function NewProcess() {
     const [startpoint, setStartpoint] = useState(null);
     const [wait, setWait] = useState(true);
 
+    //Todo darf nicht null sein oder die "vorgangsinitialdatensetzung" wartet auf uid
     const uid = auth.currentUser == null ? "" : auth.currentUser.uid;
 
     const queryParameters = new URLSearchParams(window.location.search)
@@ -72,6 +73,7 @@ export default function NewProcess() {
         } else {
             //todo statt alles einzeln ein objekt setzen
             Router.push("/bookings/new?processid=" + processId);
+            console.log(uid)
             setProcessValue(uid, "UserID")
             setProcessValue("open", "State")
             setProcessValue(processId, "Name")
@@ -80,8 +82,8 @@ export default function NewProcess() {
             setProcessValue(["Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen"], "ColorsMulti");
             setProcessValue("Groß", "Frame");
             setProcessValue("1", "NeedleSingle");
-            setProcessValue("Bitte angeben", "XCoordinate");
-            setProcessValue("Bitte angeben", "YCoordinate");
+            setProcessValue("", "XCoordinate");
+            setProcessValue("", "YCoordinate");
 
             setProcessValue([false, false, false, false, false, false], "NeedlesMulti");
             setProcessValue(processId, "ProcessId");
