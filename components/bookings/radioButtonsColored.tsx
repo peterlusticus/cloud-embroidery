@@ -2,21 +2,21 @@ import { RadioGroup } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { setProcessValue } from '../../pages/bookings/new';
-import { coloredOptions } from '../data/data';
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
 export function RadioButtonsColored(props: any) {
-    const [value, setValue] = useState(props.process.Colored)
-    props.setValue(value)
+    const [value, setValue] = useState(props.process[props.FirebaseKey])
+    const items: any[] = props.items;
     setProcessValue(value, props.FirebaseKey)
+    props.setValue(value)
 
     return (
         <RadioGroup value={value} onChange={setValue}>
             <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
-                {coloredOptions.map((item) => (
+                {items.map((item) => (
                     <RadioGroup.Option
                         key={item.id}
                         value={item.value}

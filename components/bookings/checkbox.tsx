@@ -5,20 +5,19 @@ type Obj = { [key: string]: { [key: string]: boolean } }
 let valueObj: Obj = {};
 
 export default function Checkbox(props: any) {
-    const [value, setValue] = useState(false)
+    const [value, setValue] = useState(props.process[props.FirebaseKey][props.id])
 
-    valueObj[props.FirebaseKey] = { ...valueObj[props.FirebaseKey], [props.title]: value };
+    valueObj[props.FirebaseKey] = { ...valueObj[props.FirebaseKey], [props.id]: value };
     setProcessValue(valueObj[props.FirebaseKey], props.FirebaseKey)
-    if(props.checked){
-        setValue(true)
-    }
+
     function classNames(...classes: string[]) {
         return classes.filter(Boolean).join(' ')
     }
 
     function handleClick() {
-        if (value) { setValue(false) }
-        else { setValue(true) }
+        if (value) { setValue(false);  }
+        else { setValue(true);  }
+        //setProcessValue(valueObj[props.FirebaseKey], props.FirebaseKey)
     }
 
     return (

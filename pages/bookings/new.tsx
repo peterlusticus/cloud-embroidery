@@ -1,6 +1,7 @@
 import { uuidv4 } from "@firebase/util";
 import { get, ref, set } from "firebase/database";
 import Head from "next/head";
+import Router from "next/router";
 import { useEffect, useState } from "react";
 import { CheckboxGroupMultiColor } from "../../components/bookings/checkboxGroupMultiColor";
 import { InputsAlign } from "../../components/bookings/inputsAlign";
@@ -12,7 +13,7 @@ import { SpeedSlider } from "../../components/bookings/slider";
 import ProcessSteps from "../../components/bookings/steps";
 import { UploadGcode } from "../../components/bookings/uploadGcode";
 import BookingContainer from "../../components/container/bookingContainer";
-import { frames, needles, suffix } from "../../components/data/data";
+import { coloredOptions, frames, needles, suffix } from "../../components/data/data";
 import FormContainer from "../../components/form/formContainer";
 import FormContainerEnd from "../../components/form/formContainerEnd";
 import FormItem from "../../components/form/formItem";
@@ -70,15 +71,17 @@ export default function NewProcess() {
             });
         } else {
             //todo statt alles einzeln ein objekt setzen
+            Router.push("/bookings/new?processid="+processId);
             setProcessValue(uid, "UserID")
             setProcessValue("open", "State")
             setProcessValue(processId, "Name")
             setProcessValue(false, "File");
-            setProcessValue(true, "Colored");
+            setProcessValue(false, "Colored");
             setProcessValue([false, false, false, false, false, false], "ColorsMulti");
             setProcessValue("Groß", "Frame");
             setProcessValue("1", "NeedleSingle");
             setProcessValue([false, false, false, false, false, false], "NeedlesMulti");
+            setProcessValue(processId, "ProcessId");
             setWait(false)
         }
     })
@@ -139,7 +142,7 @@ export default function NewProcess() {
                                             <FormContainer title="Farben konfigurierenrieren">
                                                 <FormSection>
                                                     <FormItem title="Einfarbig/Mehrfarbig">
-                                                        <RadioButtonsColored process={process} setValue={setColored} FirebaseKey="Colored" />
+                                                        <RadioButtonsColored process={process} setValue={setColored} items={coloredOptions} FirebaseKey="Colored" />
                                                     </FormItem>
                                                 </FormSection>
                                                 {colored == false && <FormSection>

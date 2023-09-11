@@ -1,11 +1,14 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/20/solid'
+import Router from 'next/router'
 import { Fragment } from 'react'
 import { ProcessList } from './processlist'
 
 export function ShowProcessModal(props: any) {
-
+  const handleClick = () => {
+    Router.push("/bookings/new?processid="+props.process.ProcessId);
+  }
   return (
     <Transition.Root show={props.open} as={Fragment}>
       <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={props.setOpen}>
@@ -53,6 +56,7 @@ export function ShowProcessModal(props: any) {
                 <button
                   type="button"
                   className="rounded-none text-base font-medium text-green-600 hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm"
+                  onClick={handleClick}
                 >
                   Vorgang wiederholen
                 </button>

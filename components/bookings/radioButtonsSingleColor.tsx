@@ -8,17 +8,12 @@ function classNames(...classes: string[]) {
 }
 
 export function RadioButtonsSingleColor(props: any) {
-    const items: any[] = props.items;
-    console.log(props.process)
-    const [selectedItem, setSelectedItem] = useState(props.process.NeedleSingle);
-
-    if (selectedItem.length > 0) { props.setValue(selectedItem) }
-    else { props.setValue(null) }
-
-    setProcessValue(selectedItem, props.FirebaseKey)
+    const [value, setValue] = useState(props.process[props.FirebaseKey])
+    const items: string[] = props.items;
+    setProcessValue(value, props.FirebaseKey)
 
     return (
-        <RadioGroup value={selectedItem} onChange={setSelectedItem}>
+        <RadioGroup value={value} onChange={setValue}>
             <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-6 sm:gap-x-4">
                 {items.map((item) => (
                     <RadioGroup.Option
@@ -34,7 +29,7 @@ export function RadioButtonsSingleColor(props: any) {
                                                 {item}
                                             </RadioGroup.Label>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                                 <CheckIcon

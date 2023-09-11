@@ -14,8 +14,8 @@ const LoginPage = () => {
     return (
         <div>
             <Head>
-                <title>Login {suffix}</title>
-                <meta property="og:title" content="Login" key="title" />
+                <title>Profil {suffix}</title>
+                <meta property="og:title" content="Profil" key="title" />
             </Head>
             <Container>
                 <div className="flex justify-center w-screen">
