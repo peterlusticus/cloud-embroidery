@@ -1,6 +1,6 @@
 import { RadioGroup } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { setProcessValue } from '../../pages/bookings/new';
 
 function classNames(...classes: string[]) {
@@ -11,7 +11,9 @@ export function RadioButtonsColored(props: any) {
     const [value, setValue] = useState(props.process[props.FirebaseKey])
     const items: any[] = props.items;
     setProcessValue(value, props.FirebaseKey)
-    props.setValue(value)
+    useEffect(() => {
+        props.setValue(value)
+    }, [value]);
 
     return (
         <RadioGroup value={value} onChange={setValue}>

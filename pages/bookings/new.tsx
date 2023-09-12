@@ -23,7 +23,7 @@ import { auth, db } from "../../config/firebase";
 
 type Obj = { [key: string]: [key: [key: string] | string | boolean] | string }
 var process: Obj = {}
-var processId = uuidv4();
+var processId: String;
 
 export const setProcessValue = (value: any, prop: any) => {
     process[prop] = value
@@ -72,11 +72,15 @@ export default function NewProcess() {
             });
         } else {
             //todo statt alles einzeln ein objekt setzen
-            Router.push("/bookings/new?processid=" + processId);
-            console.log(uid)
-            setProcessValue(uid, "UserID")
-            setProcessValue("open", "State")
+            const newProcessId = uuidv4();
+            console.log('i fire once');
+
+            setProcessId(newProcessId)
+            const time = Date().toLocaleString()
+            setProcessValue(time, "LastChangeTime")
             setProcessValue(processId, "Name")
+            setProcessValue(processId, "ProcessId");
+            setProcessValue("open", "State")
             setProcessValue(false, "File");
             setProcessValue(false, "Colored");
             setProcessValue(["Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen"], "ColorsMulti");
@@ -84,12 +88,14 @@ export default function NewProcess() {
             setProcessValue("1", "NeedleSingle");
             setProcessValue("", "XCoordinate");
             setProcessValue("", "YCoordinate");
-
             setProcessValue([false, false, false, false, false, false], "NeedlesMulti");
-            setProcessValue(processId, "ProcessId");
+            setProcessValue(uid, "UserID")
+
+            Router.push("/bookings/new?processid=" + processId);
+
             setWait(false)
         }
-    })
+    },[uid, existingProcessId])
 
     //next/back step
     function handleSetCurrentStep(operator: string) {
@@ -101,10 +107,6 @@ export default function NewProcess() {
     }
 
     function saveProcess() {
-        const time = Date().toLocaleString()
-        setProcessValue(time, "LastChangeTime")
-        console.log(process)
-        //set(ref(db, 'processes/' + processId), process);
         setCurrentStep(currentStep + 1)
     }
 

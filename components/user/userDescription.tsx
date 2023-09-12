@@ -197,7 +197,7 @@ export default function UserDescription(props: any) {
                             <ul role="list" className="border border-gray-200 rounded-none divide-y divide-gray-200">
                                 {Array.isArray(userProcesses)
                                     ? userProcesses.map((item: any) => {
-                                        return <li key={item} className={"pl-3 pr-4 py-3 flex items-center justify-between text-sm "}>
+                                        return <li key={item.ProcessId} className={"pl-3 pr-4 py-3 flex items-center justify-between text-sm "}>
                                             <div className="w-0 flex-1 flex items-center">
                                                 {item.State == "open" ? <ExclamationCircleIcon className="flex-shrink-0 h-5 w-5 text-gray-400" aria-hidden="true" /> : <CheckCircleIcon className="flex-shrink-0 h-5 w-5 text-gray-400" aria-hidden="true" />}
                                                 <span className="ml-2 flex-1 w-0 truncate">Vorgang "{item.Name}", zuletzt geändert am {item.Date}</span>

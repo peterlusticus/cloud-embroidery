@@ -1,16 +1,9 @@
-import { get, ref } from "firebase/database";
 import Head from "next/head";
-import React, { useState, useEffect } from "react";
 import Container from "../components/container/container";
 import { suffix } from "../components/data/data";
-import Login from "../components/login"
 import UserDescription from "../components/user/userDescription";
-import { db } from "../config/firebase";
-import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
-
-
     return (
         <div>
             <Head>

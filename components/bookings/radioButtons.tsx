@@ -2,7 +2,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RadioGroup } from '@headlessui/react';
 import { CheckIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { Key, useState } from 'react';
+import { Key, useEffect, useState } from 'react';
 import { setProcessValue } from '../../pages/bookings/new';
 
 function classNames(...classes: string[]) {
@@ -12,9 +12,16 @@ function classNames(...classes: string[]) {
 export function RadioButtonsFrame(props: any) {
     const items: any[] = props.items;
     const [selectedItem, setSelectedItem] = useState(props.process.Frame)
+    
+    useEffect(() => {
+        if (selectedItem.length > 0) {
+            props.setValue(selectedItem)
+        }
+        else {
+            props.setValue(null)
+        }
+    }, [selectedItem])
 
-    if (selectedItem.length > 0) { props.setValue(selectedItem) }
-    else { props.setValue(null) }
 
     setProcessValue(selectedItem, props.FirebaseKey)
 

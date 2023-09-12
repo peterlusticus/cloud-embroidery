@@ -1,17 +1,16 @@
-import { Fragment, useEffect, useState } from 'react'
-import { Popover, Transition } from '@headlessui/react'
+import { Popover } from '@headlessui/react'
 import {
   Bars3Icon,
   BookmarkSquareIcon,
   CalendarIcon,
-  LifebuoyIcon,
-  XMarkIcon,
+  LifebuoyIcon
 } from '@heroicons/react/24/outline'
 import { useTheme } from 'next-themes'
-import Link from 'next/link'
 import Image from 'next/image'
-import { useAuth } from '../../context/AuthContext'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { useAuth } from '../../context/AuthContext'
 
 const resources = [
   {
@@ -67,7 +66,7 @@ export default function Navbar() {
   }
 
   const user = useAuth();
-  const {logOut} = useAuth();
+  const { logOut } = useAuth();
   const router = useRouter();
 
   return (
@@ -89,12 +88,12 @@ export default function Navbar() {
           <div className="hidden items-center justify-end md:flex-1 md:flex lg:w-0">
             {
               user.user.email == null && <Link href='/login'>
-              <button className='ml-2 px-4 py-2 inline-flex items-center rounded-none text-base font-medium hover:bg-gray-200 outline-none'>
-                Anmelden
-              </button>
-            </Link>
+                <button className='ml-2 px-4 py-2 inline-flex items-center rounded-none text-base font-medium hover:bg-gray-200 outline-none'>
+                  Anmelden
+                </button>
+              </Link>
             }
-            {user.user.email && <div><Link href="/user" className='link-main'>{user.user.email}</Link><button className='button-secondary ml-2' onClick={() => {logOut(); router.push("/")}}>Logout</button></div>}
+            {user.user.email && <div><Link href="/user" className='link-main'>{user.user.email}</Link><button className='button-secondary ml-2' onClick={() => { logOut(); router.push("/") }}>Logout</button></div>}
             <Link href="/bookings/new">
               <button className='ml-2 text-white px-4 py-2 text-base font-medium rounded-none bg-green-600 hover:bg-green-500 transition'>
                 Neuer Stickvorgang

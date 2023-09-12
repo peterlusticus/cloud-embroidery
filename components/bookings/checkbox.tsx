@@ -7,10 +7,8 @@ export default function Checkbox(props: any) {
     const [value, setValue] = useState(valueArr[props.id])
 
     useEffect(() => {
-        if (value) {
-            valueArr[props.id] = value;
-            setProcessValue(valueArr, props.FirebaseKey)
-        }
+        valueArr[props.id] = value;
+        setProcessValue(valueArr, props.FirebaseKey)
     }, [value]);
 
     function handleClick() {
