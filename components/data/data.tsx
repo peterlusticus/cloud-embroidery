@@ -8,8 +8,7 @@ export const bookingSteps = [
   { id: '1', name: 'Farben wählen', href: '#' },
   { id: '2', name: 'Rahmen wählen', href: '#' },
   { id: '3', name: 'Stickcode platzieren', href: '#' },
-  { id: '4', name: 'Maschineneinstellungen', href: '#' },
-  { id: '5', name: 'Besticken', href: '#' },
+  { id: '4', name: 'Besticken', href: '#' },
 ]
 
 export const frames = [

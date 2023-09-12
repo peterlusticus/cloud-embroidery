@@ -1,8 +1,7 @@
 import { uuidv4 } from "@firebase/util";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { get, ref, set } from "firebase/database";
 import Head from "next/head";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { CheckboxGroupMultiColor } from "../../components/bookings/checkboxGroupMultiColor";
 import { Input } from "../../components/bookings/input";
@@ -19,7 +18,7 @@ import FormContainer from "../../components/form/formContainer";
 import FormContainerEnd from "../../components/form/formContainerEnd";
 import FormItem from "../../components/form/formItem";
 import FormSection from "../../components/form/formSection";
-import { auth, db } from "../../config/firebase";
+import { db } from "../../config/firebase";
 "../../components/bookings/multicolor";
 
 type Obj = { [key: string]: [key: [key: string] | string | boolean] | string }
@@ -63,6 +62,7 @@ export default function NewProcess() {
 
     const uid = userKey.uid;
 
+    const router = useRouter();
     const queryParameters = new URLSearchParams(window.location.search)
     const existingProcessId = queryParameters.get("processid");
 
@@ -101,8 +101,10 @@ export default function NewProcess() {
                 setProcessValue("", "YCoordinate");
                 setProcessValue([false, false, false, false, false, false], "NeedlesMulti");
                 setProcessValue(uid, "UserID")
+                setProcessValue("1", "Speed")
+                setProcessValue("0.000000003", "Delay")
 
-                Router.push("/bookings/new?processid=" + processId);
+                router.push("/bookings/new?processid=" + processId);
                 setWait(false)
             }
         }
@@ -231,31 +233,25 @@ export default function NewProcess() {
                             }
                             {
                                 currentStep == 4 &&
-                                <FormContainer title="Voreinstellungen anpassen">
-                                    <FormSection>
-                                        <FormItem title="todo">
-                                        </FormItem>
-                                    </FormSection>
-                                    <FormContainerEnd>
-                                        <button className="button-primary w-full" onClick={() => handleSetCurrentStep("+")} >Weiter &rarr;</button>
-                                    </FormContainerEnd>
-                                </FormContainer>
-                            }
-                            {
-                                currentStep == 5 &&
                                 <FormContainer title="Stickvorgang">
                                     <FormSection>
-                                        <FormItem title="Geschwindigkeit anpassen">
-                                            <SpeedSlider />
+                                        <FormItem title="Starten">
+                                            <button className="button-primary w-full" onClick={startProcess} >Start</button>
                                         </FormItem>
+                                        <FormItem title="Unterbrechen">
+                                            <button className="button-primary w-full" onClick={stopProcess} >Stop</button>
+                                        </FormItem>
+                                    </FormSection>
+                                    <FormSection>
                                         <FormItem title="Geschwindigkeit anpassen">
-                                            <p>Start/Stop/Pause</p>
-                                            <button className="button-secondary w-full" onClick={startProcess} >Start &rarr;</button>
-                                            <button className="button-secondary w-full" onClick={stopProcess} >Stop &rarr;</button>
+                                            <SpeedSlider process={process} FirebaseKey="Speed" />
+                                        </FormItem>
+                                        <FormItem title="GCODE-Delay">
+                                            <Input title="GCODE-Delay" process={process} FirebaseKey="Delay" />
                                         </FormItem>
                                     </FormSection>
                                     <FormContainerEnd>
-                                        <button className="button-primary w-full" onClick={() => setCurrentStep(currentStep + 1)} >Weiter &rarr;</button>
+                                        <button className="button-primary w-full" onClick={() => router.push("/")} >Beenden</button>
                                     </FormContainerEnd>
                                 </FormContainer>
                             }
