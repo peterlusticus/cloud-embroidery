@@ -10,8 +10,6 @@ export function Input(props: any) {
 
   function handleChange(event: any) {
     setValue(event.target.value);
-    setProcessValue(value, props.FirebaseKey)
-
   }
 
   return (

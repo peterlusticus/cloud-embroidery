@@ -1,8 +1,10 @@
 /* This example requires Tailwind CSS v2.0+ */
 
+import { uuidv4 } from "@firebase/util";
 import { CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/20/solid";
-import { get, ref } from "firebase/database";
+import { get, ref, set } from "firebase/database";
 import { getDownloadURL, ref as storageRef } from "firebase/storage";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { db, storage } from "../../config/firebase";
 import { useAuth } from "../../context/AuthContext";
@@ -22,11 +24,13 @@ export default function UserDescription(props: any) {
     const [open2, setOpen2] = useState(false);
     const [open3, setOpen3] = useState(false);
     const [open4, setOpen4] = useState(false);
-
     const [open5, setOpen5] = useState(false);
     const [open6, setOpen6] = useState(false);
 
     const [modalData, setModalData] = useState({});
+
+
+    const router = useRouter()
 
     //get userdata and processes
     const auth = useAuth()
@@ -44,6 +48,21 @@ export default function UserDescription(props: any) {
     getDownloadURL(pythonCodePath).then((url) => {
         setPythonCodeUrl(url)
     })
+
+    function duplicateProcess(item: any) {
+        //todo
+        get(ref(db, 'processes/' + item.ProcessId)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const newProcessiId = uuidv4();
+                const newProcess = snapshot.val();
+                newProcess.ProcessId = newProcessiId;
+                newProcess.Name = newProcess.Name + " Copy";
+                newProcess.LastChangeTime = Date().toLocaleString()
+                set(ref(db, 'processes/' + newProcessiId), newProcess);
+                router.reload()
+            }
+        })
+    }
 
     useEffect(() => {
         get(ref(db, 'users/' + auth.user.uid)).then((snapshot) => {
@@ -70,7 +89,6 @@ export default function UserDescription(props: any) {
                     }
                 }
                 setUserProcesses(selected)
-                console.log(selected)
             } else {
                 console.log("No data available");
             }
@@ -214,6 +232,18 @@ export default function UserDescription(props: any) {
                                                     Anzeigen
                                                 </button>
                                                 <ShowProcessModal open={open0} setOpen={setOpen0} process={modalData}></ShowProcessModal>
+                                                <span className="text-gray-300" aria-hidden="true">
+                                                    |
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    className="rounded-none font-medium text-green-600 hover:text-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                                    onClick={() => {
+                                                        duplicateProcess(item);
+                                                    }}
+                                                >
+                                                    Kopie
+                                                </button>
                                                 <span className="text-gray-300" aria-hidden="true">
                                                     |
                                                 </span>

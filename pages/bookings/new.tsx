@@ -1,5 +1,5 @@
 import { uuidv4 } from "@firebase/util";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { get, ref, set } from "firebase/database";
 import Head from "next/head";
 import Router from "next/router";
@@ -50,19 +50,18 @@ export default function NewProcess() {
     const [needleSingle, setNeedleSingle] = useState(null);
     const [currentStep, setCurrentStep] = useState(1);
     const [frame, setFrame] = useState(null);
-    const [startpoint, setStartpoint] = useState(null);
     const [wait, setWait] = useState(true);
+    const [processName, setProcessName] = useState("");
 
-    //Todo darf nicht null sein oder die "vorgangsinitialdatensetzung" wartet auf uid
-    const isAuth = getAuth().currentUser?.uid;
-    const [uid, setUid] = useState("");
+    //instead of auth.getCurrentUser becase this was not good
+    const key = window.sessionStorage.key(0) != null ? window.sessionStorage.key(0) : "";
+    var userKey = { "uid": "" }
+    if (key != null) {
+        const u = window.sessionStorage.getItem(key)
+        userKey = u !== null ? JSON.parse(u) : {};
+    }
 
-    useEffect(() => {
-        if (isAuth) {
-            setUid(isAuth);
-        }
-    }, [isAuth])
-
+    const uid = userKey.uid;
 
     const queryParameters = new URLSearchParams(window.location.search)
     const existingProcessId = queryParameters.get("processid");
@@ -84,7 +83,7 @@ export default function NewProcess() {
                 }).catch((error) => {
                     console.error(error);
                 });
-            } else {
+            } else if (uid !== "") {
                 //todo statt alles einzeln ein objekt setzen
                 const newProcessId = uuidv4();
                 setProcessId(newProcessId)
@@ -107,7 +106,14 @@ export default function NewProcess() {
                 setWait(false)
             }
         }
-    }, [uid, existingProcessId])
+    }, [existingProcessId])
+
+
+
+    function handleProcessNameChange(event: any) {
+        setProcessName(event.target.value);
+        setProcessValue(event.target.value, "Name")
+    }
 
     //next/back step
     function handleSetCurrentStep(operator: string) {
@@ -141,9 +147,11 @@ export default function NewProcess() {
                                 {
                                     <div className="flex">
                                         <button className="w-1/5 text-left button-secondary mb-4" onClick={() => handleSetCurrentStep("-")} >&larr; Zurück</button>
-                                        <div className="w-4/5 text-right font-medium text-gray-900 mb-4">
-                                            Vorgang "{processId}"
-                                        </div>
+                                        <input
+                                            className="w-4/5 text-right font-medium text-gray-900 mb-4"
+                                            value={process.Name.toString()}
+                                            onChange={handleProcessNameChange}
+                                        />
                                     </div>
 
                                 }

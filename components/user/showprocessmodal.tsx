@@ -1,14 +1,30 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/20/solid'
-import Router from 'next/router'
-import { Fragment } from 'react'
+import { ref, set } from 'firebase/database'
+import Router, { useRouter } from 'next/router'
+import { Fragment, useEffect, useState } from 'react'
+import { db } from '../../config/firebase'
+import { setProcessValue } from '../../pages/bookings/new'
 import { ProcessList } from './processlist'
 
 export function ShowProcessModal(props: any) {
+  const [processName, setProcessName] = useState("");
+  
   const handleClick = () => {
-    Router.push("/bookings/new?processid="+props.process.ProcessId);
+    Router.push("/bookings/new?processid=" + props.process.ProcessId);
   }
+
+  useEffect(() => {
+    if (processName != props.process.Name) {
+      set(ref(db, 'processes/' + props.process.ProcessId + "/Name"), processName);
+    }
+  }, [processName]);
+
+  function handleProcessNameChange(event: any) {
+    setProcessName(event.target.value);
+  }
+
   return (
     <Transition.Root show={props.open} as={Fragment}>
       <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={props.setOpen}>
@@ -44,9 +60,11 @@ export function ShowProcessModal(props: any) {
                   <CheckIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
                 </div>
                 <div className="mt-3 text-center sm:mt-5">
-                  <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                    Vorgang "{props.process.Name}" vom {props.process.LastChangeTime}
-                  </Dialog.Title>
+                  <input
+                    className="text-lg leading-6 font-medium text-gray-900"
+                    value={processName || props.process.Name}
+                    onChange={handleProcessNameChange}
+                  />
                   <div className="mt-2">
                     <ProcessList process={props.process}></ProcessList>
                   </div>
@@ -65,7 +83,10 @@ export function ShowProcessModal(props: any) {
                 <button
                   type="button"
                   className="inline-flex justify-center w-full rounded-none border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 sm:text-sm"
-                  onClick={() => props.setOpen(false)}
+                  onClick={() => {
+                    props.setOpen(false);
+                    window.location.reload();
+                  }}
                 >
                   Zurück zum Profil
                 </button>
