@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { browserSessionPersistence, getAuth, setPersistence } from "firebase/auth";
+import { browserSessionPersistence, getAuth, GoogleAuthProvider, setPersistence, signInWithRedirect } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 import { getStorage } from "firebase/storage";
 
@@ -21,7 +21,7 @@ initializeApp(firebaseConfig);
 
 // Set auth cookie
 export const auth = getAuth();
-setPersistence(auth, browserSessionPersistence)
+setPersistence(auth, browserSessionPersistence);
 
 // Database
 export const db = getDatabase();

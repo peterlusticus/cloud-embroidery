@@ -1,8 +1,9 @@
 import { uuidv4 } from "@firebase/util";
+import { getAuth } from "firebase/auth";
 import { get, ref, set } from "firebase/database";
 import Head from "next/head";
 import Router from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CheckboxGroupMultiColor } from "../../components/bookings/checkboxGroupMultiColor";
 import { Input } from "../../components/bookings/input";
 import { RadioButtonsFrame } from "../../components/bookings/radioButtons";
@@ -53,49 +54,60 @@ export default function NewProcess() {
     const [wait, setWait] = useState(true);
 
     //Todo darf nicht null sein oder die "vorgangsinitialdatensetzung" wartet auf uid
-    const uid = auth.currentUser == null ? "" : auth.currentUser.uid;
+    const isAuth = getAuth().currentUser?.uid;
+    const [uid, setUid] = useState("");
+
+    useEffect(() => {
+        if (isAuth) {
+            setUid(isAuth);
+        }
+    }, [isAuth])
+
 
     const queryParameters = new URLSearchParams(window.location.search)
     const existingProcessId = queryParameters.get("processid");
+
+    const initialized = useRef(false) //to prevent double load
+
     useEffect(() => {
-        if (existingProcessId) {
-            setProcessId(existingProcessId);
-            get(ref(db, 'processes/' + existingProcessId + '/')).then((snapshot) => {
-                if (snapshot.exists()) {
-                    setProcess(snapshot.val());
-                    setWait(false)
-                } else {
-                    console.log("No data available");
-                }
-            }).catch((error) => {
-                console.error(error);
-            });
-        } else {
-            //todo statt alles einzeln ein objekt setzen
-            const newProcessId = uuidv4();
-            console.log('i fire once');
+        if (!initialized.current) {
+            initialized.current = true
+            if (existingProcessId) {
+                setProcessId(existingProcessId);
+                get(ref(db, 'processes/' + existingProcessId + '/')).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        setProcess(snapshot.val());
+                        setWait(false)
+                    } else {
+                        console.log("No data available");
+                    }
+                }).catch((error) => {
+                    console.error(error);
+                });
+            } else {
+                //todo statt alles einzeln ein objekt setzen
+                const newProcessId = uuidv4();
+                setProcessId(newProcessId)
+                const time = Date().toLocaleString()
+                setProcessValue(time, "LastChangeTime")
+                setProcessValue(processId, "Name")
+                setProcessValue(processId, "ProcessId");
+                setProcessValue("open", "State")
+                setProcessValue(false, "File");
+                setProcessValue(false, "Colored");
+                setProcessValue(["Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen"], "ColorsMulti");
+                setProcessValue("Groß", "Frame");
+                setProcessValue("1", "NeedleSingle");
+                setProcessValue("", "XCoordinate");
+                setProcessValue("", "YCoordinate");
+                setProcessValue([false, false, false, false, false, false], "NeedlesMulti");
+                setProcessValue(uid, "UserID")
 
-            setProcessId(newProcessId)
-            const time = Date().toLocaleString()
-            setProcessValue(time, "LastChangeTime")
-            setProcessValue(processId, "Name")
-            setProcessValue(processId, "ProcessId");
-            setProcessValue("open", "State")
-            setProcessValue(false, "File");
-            setProcessValue(false, "Colored");
-            setProcessValue(["Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen", "Bitte wählen"], "ColorsMulti");
-            setProcessValue("Groß", "Frame");
-            setProcessValue("1", "NeedleSingle");
-            setProcessValue("", "XCoordinate");
-            setProcessValue("", "YCoordinate");
-            setProcessValue([false, false, false, false, false, false], "NeedlesMulti");
-            setProcessValue(uid, "UserID")
-
-            Router.push("/bookings/new?processid=" + processId);
-
-            setWait(false)
+                Router.push("/bookings/new?processid=" + processId);
+                setWait(false)
+            }
         }
-    },[uid, existingProcessId])
+    }, [uid, existingProcessId])
 
     //next/back step
     function handleSetCurrentStep(operator: string) {
@@ -104,10 +116,6 @@ export default function NewProcess() {
         else if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
         }
-    }
-
-    function saveProcess() {
-        setCurrentStep(currentStep + 1)
     }
 
     function startProcess() {
@@ -171,7 +179,7 @@ export default function NewProcess() {
                                                         </FormSection>
                                                     </div>}
                                                 <FormContainerEnd>
-                                                    <button className="button-primary w-full" onClick={saveProcess} >Weiter &rarr;</button>
+                                                    <button className="button-primary w-full" onClick={() => handleSetCurrentStep("+")} >Weiter &rarr;</button>
                                                 </FormContainerEnd>
                                             </FormContainer>
                                         </div>
@@ -188,7 +196,7 @@ export default function NewProcess() {
                                         </FormItem>
                                     </FormSection>
                                     <FormContainerEnd>
-                                        <button className="button-primary w-full" onClick={saveProcess} >Weiter &rarr;</button>
+                                        <button className="button-primary w-full" onClick={() => handleSetCurrentStep("+")} >Weiter &rarr;</button>
                                     </FormContainerEnd>
                                 </FormContainer>
                             }
@@ -209,7 +217,7 @@ export default function NewProcess() {
                                         </FormItem>
                                     </FormSection>
                                     <FormContainerEnd>
-                                        <button className="button-primary w-full" onClick={saveProcess} >Weiter &rarr;</button>
+                                        <button className="button-primary w-full" onClick={() => handleSetCurrentStep("+")} >Weiter &rarr;</button>
                                     </FormContainerEnd>
                                 </FormContainer>
                             }
@@ -221,7 +229,7 @@ export default function NewProcess() {
                                         </FormItem>
                                     </FormSection>
                                     <FormContainerEnd>
-                                        <button className="button-primary w-full" onClick={saveProcess} >Weiter &rarr;</button>
+                                        <button className="button-primary w-full" onClick={() => handleSetCurrentStep("+")} >Weiter &rarr;</button>
                                     </FormContainerEnd>
                                 </FormContainer>
                             }

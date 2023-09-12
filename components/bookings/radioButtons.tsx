@@ -12,7 +12,7 @@ function classNames(...classes: string[]) {
 export function RadioButtonsFrame(props: any) {
     const items: any[] = props.items;
     const [selectedItem, setSelectedItem] = useState(props.process.Frame)
-    
+
     useEffect(() => {
         if (selectedItem.length > 0) {
             props.setValue(selectedItem)

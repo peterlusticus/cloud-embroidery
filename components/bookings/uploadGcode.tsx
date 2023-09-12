@@ -8,11 +8,14 @@ import { setProcessValue } from "../../pages/bookings/new";
 export function UploadGcode(props: any) {
   // State to store uploaded file
   const [file, setFile] = useState<File>();
-  const storageRef = ref(storage, '/files/'+props.FirebaseKey+'/gcode.txt');
+  const storageRef = ref(storage, '/files/' + props.FirebaseKey + '/gcode.txt');
 
-  if(props.process.File){
-    setFile(new File([""], ""));
-  }
+
+  useEffect(() => {
+    if (props.process.File) {
+      setFile(new File([""], ""));
+    }
+  }, []);
 
   // Upload file on change
   useEffect(() => {
@@ -26,12 +29,13 @@ export function UploadGcode(props: any) {
     setFile(event.target.files[0]);
   }
 
-  const handleUpload = () => {    
-    const content = file == undefined ? new File([""], "") : file;
-    uploadBytes(storageRef, content).then((snapshot) => {
-      console.log(snapshot.metadata)
-    });
-    
+  const handleUpload = () => {
+    if (file?.size) {
+      const content = file;
+      uploadBytes(storageRef, content).then((snapshot) => {
+        console.log(snapshot.metadata)
+      });
+    }
   };
 
   return (
